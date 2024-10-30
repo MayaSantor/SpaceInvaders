@@ -1,4 +1,5 @@
 import Player from "./classes/Player.js";
+import Projectile from "./classes/Projectile.js";
 
 const canvas = document.querySelector("canvas");
 const ctx = canvas.getContext('2d');
@@ -10,6 +11,8 @@ ctx.imageSmoothingEnabled = false
 
 const player = new Player (canvas.width, canvas.height);
 
+const p = new Projectile({x: 300, y: 300}, 5)
+
 const keys = {
     left: false,
     right: false
@@ -17,6 +20,8 @@ const keys = {
 
 const gameLoop = () => {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    p.draw(ctx);
 
     ctx.save();
 
