@@ -32,14 +32,12 @@ gameLoop();
 
 window.addEventListener("keydown", (event) => {
     const key = event.key.toLowerCase();
-    
     if (key === "a") keys.left = true;
     if (key === "d") keys.right = true;
 });
 
 window.addEventListener("keyup", (event) => {
     const key = event.key.toLowerCase();
-
-    if (key === "a") keys.left = false;
-    if (key === "d") keys.right = false;
+    if (key === "a") keys.left = false
+    if (key === "d") keys.right = false
 });
