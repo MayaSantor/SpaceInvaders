@@ -1,5 +1,5 @@
+import Invader from "./classes/Invader.js";
 import Player from "./classes/Player.js";
-import Projectile from "./classes/Projectile.js";
 
 const canvas = document.querySelector("canvas");
 const ctx = canvas.getContext('2d');
@@ -85,14 +85,14 @@ window.addEventListener("keydown", (event) => {
     const key = event.key.toLowerCase();
     if (key === "a") keys.left = true;
     if (key === "d") keys.right = true;
-    if (key === "enter") keys.shoot.pressed = true
+    if (key === " ") keys.shoot.pressed = true
 });
 
 window.addEventListener("keyup", (event) => {
     const key = event.key.toLowerCase();
     if (key === "a") keys.left = false
     if (key === "d") keys.right = false
-    if (key === "enter") {
+    if (key === " ") {
         keys.shoot.pressed = false;
         keys.shoot.released = true;        
     }
