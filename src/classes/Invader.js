@@ -28,6 +28,10 @@ class Invader {
         this.position.y += this.height;
     }
 
+    incrementVelocity (boost) {
+        this.velocity += boost;
+    }
+
 
 
     draw(ctx) {
