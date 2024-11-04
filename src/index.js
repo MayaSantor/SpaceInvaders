@@ -1,5 +1,6 @@
 import Invader from "./classes/Invader.js";
 import Player from "./classes/Player.js";
+import Grid from "./classes/Grid.js";
 
 const canvas = document.querySelector("canvas");
 const ctx = canvas.getContext('2d');
@@ -10,6 +11,7 @@ canvas.height = innerHeight;
 ctx.imageSmoothingEnabled = false
 
 const player = new Player (canvas.width, canvas.height);
+const grid = new Grid(3, 6);
 const playerProjectiles = [];
 
 
@@ -42,7 +44,9 @@ const gameLoop = () => {
 
     drawProjectiles();
     clearProjectiles();
-    
+
+    grid.invaders.forEach((invader) => invader.draw(ctx));
+
     ctx.save();
 
     ctx.translate(
