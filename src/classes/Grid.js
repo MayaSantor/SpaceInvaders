@@ -50,7 +50,7 @@ class Grid {
             
             if (this.moveDown) {
                 invader.moveDown();
-                invader.incrementVelocity(0.1);
+                invader.incrementVelocity(0.5);
                 this.invadersVelocity = invader.velocity;
             }
 
@@ -68,12 +68,12 @@ class Grid {
 
     reachedLeftBoundary() {
         return this.invaders.some(
-            (invader)=> invader.position.x <= -0
+            (invader)=> invader.position.x <= 0
         )
     }
     getRandomInvader () {
-        const index = Math.floor(Math.random() = this.invaders.length);
-        return this.invaders [index]
+        const index = Math.floor(Math.random() * this.invaders.length);
+        return this.invaders [index];
 
     }
 }

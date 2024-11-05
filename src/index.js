@@ -27,10 +27,11 @@ const keys = {
 
 const drawProjectiles = () => {
     const projectiles = [...playerProjectiles, ...invadersProjectiles];
-    playerProjectiles.forEach((projectile) => {    
+    projectiles.forEach((projectile) => {    
         projectile.draw(ctx);
         projectile.update();
     })
+    
 }
 
 const clearProjectiles = () => {
