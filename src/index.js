@@ -42,11 +42,25 @@ const clearProjectiles = () => {
     })
 }
 
+const checkShootInvaders = () => {
+    grid.invaders.forEach((invader, invaderIndex) => {
+        playerProjectiles.some((projectile, projectileIndex) => {
+            if (invader.hit(projectile)) {
+                grid.invaders.splice(invaderIndex, 1);
+                playerProjectiles.splice(projectileIndex, 1)
+                
+            }
+        })
+    })
+}
+
 const gameLoop = () => {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     drawProjectiles();
     clearProjectiles();
+
+    checkShootInvaders();
 
    grid.draw(ctx);
    grid.update();
