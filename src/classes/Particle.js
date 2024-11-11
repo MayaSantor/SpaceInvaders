@@ -4,12 +4,14 @@ class Particle {
         this.velocity = velocity;
         this.radius = radius;
         this.color = color;
-        this.opacity = 1
+        this.opacity = 1;
     }
 
 
     draw(ctx) {
+        ctx.save();
         ctx.beginPath();
+        ctx.globalAlpha = this.opacity;
         ctx.arc(
             this.position.x,
             this.position.y,
@@ -18,8 +20,14 @@ class Particle {
             Math.PI * 2
         );
         ctx.fillStyle = this.color;
-        ctx.fill()
-        
+        ctx.fill();   
+        ctx.restore()
+    }
+
+    update () {
+        this.position.x += this.velocity.x;
+        this.position.y += this.velocity.y;
+        this.opacity = this.opacity - 0.01 <= 0 ? 0 : this.opacity - 0.01
     }
 }
 

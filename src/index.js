@@ -15,6 +15,7 @@ const player = new Player (canvas.width, canvas.height);
 const grid = new Grid(3, 6);
 const playerProjectiles = [];
 const invadersProjectiles = [];
+const particles = [];
 
 
 const keys = {
@@ -31,8 +32,16 @@ const drawProjectiles = () => {
     projectiles.forEach((projectile) => {    
         projectile.draw(ctx);
         projectile.update();
-    })
-    
+    })   
+}
+
+const drawParticles = () => {
+    particles.forEach((particle) => {
+        particle.draw(ctx);
+        particle.update();
+    }) 
+
+
 }
 
 const clearProjectiles = () => {
@@ -43,10 +52,39 @@ const clearProjectiles = () => {
     })
 }
 
+const creatExplosion = (position, size, color) => {
+    for (let i = 0; i < size; i += 1) {
+        const particle = new Particle (
+            {
+                x: position.x,
+                y: position.y
+            },
+            {
+                x:Math.random() -0.5 * 1.5,
+                y:Math.random() -0.5 * 1.5
+            },
+            2,
+            color
+        );
+
+        particles.push(particle)
+        
+    }
+}
+
 const checkShootInvaders = () => {
     grid.invaders.forEach((invader, invaderIndex) => {
         playerProjectiles.some((projectile, projectileIndex) => {
             if (invader.hit(projectile)) {
+                creatExplosion(
+                    {
+                        x: invader.position.x + invader.width / 2,
+                        y: invader.position.y + invader.height / 2
+                    },
+                    10,
+                    "#941cff"
+                );
+
                 grid.invaders.splice(invaderIndex, 1);
                 playerProjectiles.splice(projectileIndex, 1)
                 
@@ -56,10 +94,11 @@ const checkShootInvaders = () => {
 }
 
 
+
 const gameLoop = () => {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-
+    drawParticles();
     drawProjectiles();
     clearProjectiles();
 
