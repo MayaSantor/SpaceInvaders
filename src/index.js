@@ -2,6 +2,7 @@ import Player from "./classes/Player.js";
 import Grid from "./classes/Grid.js";
 import Particle from "./classes/Particle.js";
 import { GameState } from "./utils/constants.js";
+import Obstacle from "./classes/Obstacle.js";
 
 const canvas = document.querySelector("canvas");
 const ctx = canvas.getContext('2d');
@@ -19,7 +20,22 @@ const grid = new Grid(3, 6);
 const playerProjectiles = [];
 const invadersProjectiles = [];
 const particles = [];
+const obstacles  = [];
 
+const initObstacles = () => {
+    const x = canvas.width / 2 - 50;
+    const y = canvas.height - 250;
+    const offset = canvas.width * 0.15;
+    const color = "crimson";
+
+    const obstacle1 = new Obstacle({ x: x - offset, y }, 100, 20, color);
+    const obstacle2 = new Obstacle({ x: x + offset, y }, 100, 20, color);
+
+    obstacles.push(obstacle1);
+    obstacles.push(obstacle2);
+};
+
+initObstacles();
 
 const keys = {
     left: false,
@@ -29,6 +45,11 @@ const keys = {
         released: true
     }
 };
+
+const drawObstacles = () => {
+    obstacles.forEach((obstacle) => obstacle.draw(ctx));
+};
+
 
 const drawProjectiles = () => {
     const projectiles = [...playerProjectiles, ...invadersProjectiles];
@@ -43,7 +64,6 @@ const drawParticles = () => {
         particle.draw(ctx);
         particle.update();
     }) 
-
 
 }
 
@@ -121,6 +141,20 @@ const checkShootPlayer = () => {
     })
 }
 
+const checkShootObstacles = () => {
+    obstacles.forEach((obstacle) => {
+        playerProjectiles.some((projectile, index) => { 
+            if (obstacle.hit(projectile)) {
+                playerProjectiles.splice(index, 1);
+            }
+        });
+        invadersProjectiles.some((projectile, index) => { 
+            if (obstacle.hit(projectile)) {
+                invadersProjectiles.splice(index, 1);
+            }
+        });
+    });
+ };
 const spawnGrid = () => {
     if (grid.invaders.length === 0) {
         grid.rows = Math.round(Math.random() * 9 + 1);
@@ -168,6 +202,7 @@ const gameLoop = () => {
 
         drawProjectiles();
         drawParticles();
+        drawObstacles();
 
         clearProjectiles();
         clearParticles();
@@ -175,6 +210,7 @@ const gameLoop = () => {
 
         checkShootInvaders();
         checkShootPlayer();
+        checkShootObstacles();
 
         grid.draw(ctx);
         grid.update(player.alive);
@@ -214,6 +250,7 @@ const gameLoop = () => {
     if (currentState == GameState.GAME_OVER) {
         drawParticles();
         drawProjectiles();
+        drawObstacles();
 
         clearParticles();
         clearProjectiles();
