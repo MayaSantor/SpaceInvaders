@@ -7,7 +7,7 @@ const canvas = document.querySelector("canvas");
 const ctx = canvas.getContext('2d');
 
 canvas.width = innerWidth;
-canvas.height = innerHeight;
+canvas.height = innerHeight - 5;
 
 ctx.imageSmoothingEnabled = false
 
@@ -52,7 +52,15 @@ const clearProjectiles = () => {
     })
 }
 
-const creatExplosion = (position, size, color) => {
+const clearParticles = () => {
+    particles.forEach((particle, i) => {
+        if (particle.opacity <= 0) {
+            particles.splice (i,1);           
+        }
+    })
+}
+
+const createExplosion = (position, size, color) => {
     for (let i = 0; i < size; i += 1) {
         const particle = new Particle (
             {
@@ -76,13 +84,21 @@ const checkShootInvaders = () => {
     grid.invaders.forEach((invader, invaderIndex) => {
         playerProjectiles.some((projectile, projectileIndex) => {
             if (invader.hit(projectile)) {
-                creatExplosion(
+                createExplosion(
                     {
                         x: invader.position.x + invader.width / 2,
                         y: invader.position.y + invader.height / 2
                     },
                     10,
                     "#941cff"
+                );
+                createExplosion(
+                    {
+                        x: invader.position.x + invader.width / 2,
+                        y: invader.position.y + invader.height / 2
+                    },
+                    10,
+                    "white"
                 );
 
                 grid.invaders.splice(invaderIndex, 1);
@@ -93,7 +109,43 @@ const checkShootInvaders = () => {
     })
 }
 
+const checkShootPlayer = () => {
+    invadersProjectiles.some((projectile, i) => {
+        if (player.hit(projectile)) {
+            invadersProjectiles.splice(i, 1);
+            gameOver();
+        }
+    })
+}
 
+const gameOver = () => {
+    createExplosion(
+        {
+            x: player.position.x + player.width / 2,
+            y: player.position.y + player.height / 2,
+        },
+        10,
+        "white"
+    );
+
+    createExplosion(
+        {
+            x: player.position.x + player.width / 2,
+            y: player.position.y + player.height / 2,
+        },
+        5,
+        "#4D9BE6"
+    );
+
+    createExplosion(
+        {
+            x: player.position.x + player.width / 2,
+            y: player.position.y + player.height / 2,
+        },
+        5,
+        "crimson"
+    );
+};
 
 const gameLoop = () => {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -101,7 +153,9 @@ const gameLoop = () => {
     drawParticles();
     drawProjectiles();
     clearProjectiles();
-
+    clearParticles();
+    
+    checkShootPlayer();
     checkShootInvaders();
 
    grid.draw(ctx);

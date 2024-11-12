@@ -27,7 +27,7 @@ class Particle {
     update () {
         this.position.x += this.velocity.x;
         this.position.y += this.velocity.y;
-        this.opacity = this.opacity - 0.01 <= 0 ? 0 : this.opacity - 0.01
+        this.opacity = this.opacity - 0.01 <= 0 ? 0 : this.opacity - 0.008;
     }
 }
 
