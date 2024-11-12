@@ -1,7 +1,7 @@
-import Invader from "./classes/Invader.js";
 import Player from "./classes/Player.js";
 import Grid from "./classes/Grid.js";
 import Particle from "./classes/Particle.js";
+import { GameState } from "./utils/constants.js";
 
 const canvas = document.querySelector("canvas");
 const ctx = canvas.getContext('2d');
@@ -11,8 +11,11 @@ canvas.height = innerHeight - 5;
 
 ctx.imageSmoothingEnabled = false
 
+let currentState = GameState.PLAYING
+
 const player = new Player (canvas.width, canvas.height);
 const grid = new Grid(3, 6);
+
 const playerProjectiles = [];
 const invadersProjectiles = [];
 const particles = [];
@@ -118,6 +121,14 @@ const checkShootPlayer = () => {
     })
 }
 
+const spawnGrid = () => {
+    if (grid.invaders.length === 0) {
+        grid.rows = Math.round(Math.random() * 9 + 1);
+        grid.cols = Math.round(Math.random() * 9 + 1);
+        grid.restart();
+    }
+}
+
 const gameOver = () => {
     createExplosion(
         {
@@ -145,54 +156,71 @@ const gameOver = () => {
         5,
         "crimson"
     );
+    currentState = GameState.GAME_OVER;
+    player.alive = false;
 };
 
 const gameLoop = () => {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    drawParticles();
-    drawProjectiles();
-    clearProjectiles();
-    clearParticles();
-    
-    checkShootPlayer();
-    checkShootInvaders();
+    if (currentState == GameState.PLAYING) {
+        spawnGrid();
 
-   grid.draw(ctx);
-   grid.update();
+        drawProjectiles();
+        drawParticles();
 
-    ctx.save();
+        clearProjectiles();
+        clearParticles();
 
-    ctx.translate(
-        player.position.x + player.width / 2,
-        player.position.y + player.height / 2
-    );
 
-    if (keys.shoot.pressed && keys.shoot.released){
-        player.shoot(playerProjectiles);
-        keys.shoot.released = false;
+        checkShootInvaders();
+        checkShootPlayer();
+
+        grid.draw(ctx);
+        grid.update(player.alive);
+
+        ctx.save();
+
+        ctx.translate(
+            player.position.x + player.width / 2,
+            player.position.y + player.height / 2
+        );
+
+        if (keys.shoot.pressed && keys.shoot.released) {
+            player.shoot(playerProjectiles);
+            keys.shoot.released = false;
+        }
+
+        if (keys.left && player.position.x >= 0) {
+            player.moveLeft();
+            ctx.rotate(-0.15)
+        }
+
+        if (keys.right && player.position.x <= canvas.width - player.width) {
+            player.moveRight();
+            ctx.rotate(0.15)
+        }
+
+        ctx.translate(
+            -player.position.x - player.width / 2,
+            -player.position.y - player.height / 2,
+        );
+
+        player.draw(ctx);
+
+        ctx.restore();
     }
-    
-    if (keys.left && player.position.x >= 0) {
-     player.moveLeft();
-     ctx.rotate(-0.15)
+
+    if (currentState == GameState.GAME_OVER) {
+        drawParticles();
+        drawProjectiles();
+
+        clearParticles();
+        clearProjectiles();
+        
+        grid.draw(ctx);
+        grid.update(player.alive);
     }
-
-    if (keys.right && player.position.x <= canvas.width - player.width) {
-        player.moveRight();
-        ctx.rotate(0.15)
-    }
-
-    ctx.translate(
-        -player.position.x - player.width / 2,
-        -player.position.y - player.height / 2,
-    )
-
-    player.draw(ctx);
-
-
-
-    ctx.restore();
 
     requestAnimationFrame(gameLoop);
 }

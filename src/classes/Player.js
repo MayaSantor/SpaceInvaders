@@ -3,6 +3,7 @@ import Projectile from "./Projectile.js";
 
 class Player {
     constructor (canvasWidth, canvasHeight) {
+        this.alive = true
         this.width = 48 * 2;
         this.height = 48 * 2;
         this.velocity = 8;
