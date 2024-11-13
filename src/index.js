@@ -4,6 +4,17 @@ import Particle from "./classes/Particle.js";
 import { GameState } from "./utils/constants.js";
 import Obstacle from "./classes/Obstacle.js";
 
+const startScreen = document.querySelector(".start-screen");
+const gameOverScreen = document.querySelector(".game-over");
+const scoreUi = document.querySelector(".score-ui");
+const scoreElement = document.querySelector(".score > span");
+const levelElement = document.querySelector(".level > span");
+const highElement = document.querySelector(".high > span");
+const buttonPlay = document.querySelector(".button-play");
+const buttonRestart = document.querySelector(".button-restart");
+
+gameOverScreen.remove();
+
 const canvas = document.querySelector("canvas");
 const ctx = canvas.getContext('2d');
 
@@ -12,7 +23,7 @@ canvas.height = innerHeight - 5;
 
 ctx.imageSmoothingEnabled = false
 
-let currentState = GameState.PLAYING
+let currentState = GameState.START
 
 const player = new Player (canvas.width, canvas.height);
 const grid = new Grid(3, 6);
@@ -190,8 +201,10 @@ const gameOver = () => {
         5,
         "crimson"
     );
+
     currentState = GameState.GAME_OVER;
     player.alive = false;
+    document.body.append(gameOverScreen)
 };
 
 const gameLoop = () => {
@@ -281,7 +294,14 @@ window.addEventListener("keyup", (event) => {
     }
 });
 
-setInterval (() => {
+
+
+buttonPlay.addEventListener("click", () => {
+    startScreen.remove()
+    scoreUi.style.display = "block"
+    currentState = GameState.PLAYING
+
+    setInterval (() => {
     const invader = grid.getRandomInvader()
     if (invader) {
         invader.shoot(invadersProjectiles)        
@@ -289,3 +309,4 @@ setInterval (() => {
 },
 1000
 )
+})
