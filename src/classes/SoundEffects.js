@@ -32,9 +32,9 @@ class SoundEffects {
     }
 
     playHitSound () {
-        this.hitSounds [this.hitSounds].currentTime = 0
+        this.hitSounds [this.currentHitSound].currentTime = 0
         this.hitSounds [this.currentHitSound].play()
-        this.currentHitSound = (this.currentHitSound + 1) % this.currentHitSound.length
+        this.currentHitSound = (this.currentHitSound + 1) % this.hitSounds.length
     }
 
     playExplosionSound () {
