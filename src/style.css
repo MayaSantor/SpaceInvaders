@@ -33,12 +33,28 @@ canvas{
     color: #aaa;
     margin-top: auto;
     margin-bottom: 20px;
-    text-decoration: underline;
+    text-decoration: none;
 }
 
 .start-screen > div {
     margin-top: auto;
 }
+
+a {
+    text-decoration: none;
+}
+
+a:link,
+a:active,
+a:visited {
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: none;
+    color: pink;
+}
+
 
 .button-play, 
 .button-restart {
