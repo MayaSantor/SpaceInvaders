@@ -193,6 +193,8 @@ const spawnGrid = () => {
         grid.rows = Math.round(Math.random() * 9 + 1);
         grid.cols = Math.round(Math.random() * 9 + 1);
         grid.restart();
+
+        gameData.level += 1
     }
 }
 
